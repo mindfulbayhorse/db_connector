@@ -10,7 +10,7 @@ spl_autoload_register(
         static $classes = null;
         if ($classes === null) {
             $classes = array(
-                'Email' => 'Email.php',
+                'MysqlConnector' => 'MysqlConnector.php',
             );
         }
         $cn = strtolower($class);

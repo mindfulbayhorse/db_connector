@@ -1,0 +1,7 @@
+<phpunit bootstrap="/var/www/default/manipulation_buttons/db_connector/src/Mysqlconnector.php">
+  <testsuites>
+    <testsuite name="mysql">
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>
