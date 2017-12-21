@@ -3,23 +3,11 @@
 /**
  * @author Olga Zhilkova
  * @copyright 2017
+ * temporary including classes by full absolute path
  */
-
-spl_autoload_register(
-    function($class) {
-        static $classes = null;
-        if ($classes === null) {
-            $classes = array(
-                'MysqlConnector' => 'MysqlConnector.php',
-            );
-        }
-        $cn = strtolower($class);
-        if (isset($classes[$cn])) {
-            require __DIR__ . $classes[$cn];
-        }
-    },
-    true,
-    false
-);
+require '/var/www/default/manipulation_buttons/db_connector/src/interfaces/exception.php';
+require '/var/www/default/manipulation_buttons/db_connector/src/exceptions/InvalidArgumentException.php';
+require '/var/www/default/manipulation_buttons/db_connector/src/SingleDBConneciton.php';
+require '/var/www/default/manipulation_buttons/db_connector/src/DBconnector.php';
 
 ?>

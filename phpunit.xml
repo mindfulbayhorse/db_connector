@@ -1,4 +1,4 @@
-<phpunit bootstrap="/var/www/default/manipulation_buttons/db_connector/src/Mysqlconnector.php">
+<phpunit bootstrap="/var/www/default/manipulation_buttons/db_connector/src/autoload.php">
   <testsuites>
     <testsuite name="mysql">
       <directory>tests</directory>
