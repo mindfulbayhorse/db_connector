@@ -9,27 +9,39 @@ final class DBconnectorTest extends TestCase
 {
     public function testHostCannotBeCreatedFromInvalidIPAddress(): void
     {
-        $expected = new DBconnector;
+        $classDB = new DBconnector;
         $this->expectException(InvalidArgumentException::class);
 
-        $expected->getDnsfromString('host','justtext');
+        $classDB->getParamFromString('host','justtext');
     }
 
-    public function testgetDnsfromStringParameterIsCreated(): void
+    public function testgetfromStringParameterIsCreated(): void
     {
-        $expected = new DBconnector;
-    
-        $expected->getDnsfromString('dbname','testdb');
+        $classDB = new DBconnector;
+        $classDB->getParamFromString('dbname','testdb');
         //$this->assertObjectHasAttribute('foo', new stdClass);
-        $this->assertEquals($expected->dbname, "testdb");
+        $this->assertEquals($classDB->params['dbname'], "testdb");
     }
     
-     public function testgetDnsfromStringParameterIsNotFound(): void
+    public function testgetDnsfromStringParameterIsNotFound(): void
     {
-        $expected = new DBconnector;
-        $expected->getDnsfromString('anystring','Parameter is not found!');
-        $this->assertEquals($expected->messerror, "Parameter is not found!");
+        $classDB = new DBconnector;
+        $this->assertFalse($classDB->getParamFromString('anystring','anyvalue'));
     }
+    
+    public function testgetParamFromStringEmpty(): void
+    {
+        $classDB = new DBconnector;
+        $classDB->getParamFromString('dbname','');
+        $this->assertEquals($classDB->params['dbname'], "");
+    }
+    
+    /*public function testgetParamisNotFound(): string
+    {
+      $classDB= new DBconnector;
+      $classDB->getParam('anystring','enyvalue');
+      $this->assertFalse($classDB->messerror, "Parameter is not found!");
+    }*/
 }
 
 

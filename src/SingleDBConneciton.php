@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace factoryDB;
 
 /**
@@ -8,13 +9,18 @@ namespace factoryDB;
 abstract class SingleDBConnection
 {
 
-    protected $host='';
     protected $user='';
     protected $password='';
     protected $dns='';
-    protected $dbname='';
+    
+    public $params=[];
 
-    public function checkParams()
+    public function checkParams($params)
+    {
+      
+    }
+    
+    public function getDns():string
     {
       
     }
