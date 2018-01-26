@@ -7,13 +7,13 @@ use PHPUnit\Framework\TestCase;
  */
 final class DBconnectorTest extends TestCase
 {
-    public function testHostCannotBeCreatedFromInvalidIPAddress(): void
+    /*public function testHostCannotBeCreatedFromInvalidIPAddress(): void
     {
         $classDB = new DBconnector;
         $this->expectException(InvalidArgumentException::class);
 
         $classDB->getParamFromString('host','justtext');
-    }
+    }*/
 
     public function testgetfromStringParameterIsCreated(): void
     {
@@ -26,7 +26,7 @@ final class DBconnectorTest extends TestCase
     public function testgetDnsfromStringParameterIsNotFound(): void
     {
         $classDB = new DBconnector;
-        $this->assertFalse($classDB->getParamFromString('anystring','anyvalue'));
+        $this->assertEmpty($classDB->getParamFromString('anystring','anyvalue'));
     }
     
     public function testgetParamFromStringEmpty(): void
@@ -34,6 +34,13 @@ final class DBconnectorTest extends TestCase
         $classDB = new DBconnector;
         $classDB->getParamFromString('dbname','');
         $this->assertEquals($classDB->params['dbname'], "");
+    }
+    
+    public function testgetParamFromStringMessage():void
+    {
+        $classDB = new DBconnector;
+        $classDB->getParamFromString('host','incorrect');
+        $this->assertNotEmpty($classDB->messerror['Error']['invalid_host']);
     }
     
     /*public function testgetParamisNotFound(): string
