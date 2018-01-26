@@ -13,43 +13,66 @@ class DBconnector extends SingleDBConnection
     protected $password='';
     protected $dns='';
     
+    public $dbname='';
+    public $host='';
     public $params=[];
+    
     public $mess_types;
-    public $messerror='';
+    public $messerror=[];
 
     
     const HOST='host';
     const DBNAME='dbname';
     const DEFAULT_HOST='localhost';
     
-    protected function setTypesMessanges()
+    protected function setMessangesTypes()
     {
-      $this->mess_types=array('not_found'=>"Parameter is not found!");
+      $this->mess_types=array('Error'=>false,
+                              'Info'=>false,
+                              'Success'=>false);
+    }
+    
+    protected function setMessanges()
+    {
+      $this->$messerror['Error']['not_found']="Parameter is not found!";
     }
     
     //identifying and storing each param from string
-    public function getParamFromString(string $par_type, string $par_val): bool
+    public function getParamFromString(string $par_type, string $par_val): void
     {
         $result=true;
         
         switch ($par_type)
         {
             case self::HOST:
+              try 
+              {
                 $this->ensureHostIsValid($par_val);
-                $this->params[self::HOST]=$par_val;
-                break;
+              }
+              catch(InvalidArgumentException $e)
+              {
+                $this->mess_types['Error']=true;
+                $this->messerror['Error']['invalid_host']=$e->getMessage();
+              }
+              $this->params[self::HOST]=$par_val;
+              break;
             case self::DBNAME:
                 $this->params[self::DBNAME]=$par_val;
                 break;
             default:
-               return false;
+               $this->messerror='';
         }
-        return true;
+    }
+    
+    //getDb nae function to use it in real DB connection
+    public function getDBname(string $dbname): bool
+    {
+      $this->getParamFromString(self::DBNAME,$dbname);
     }
     
     
     //validate host of connection as IP address
-    private function ensureHostIsValid(string $host): void
+    private function ensureHostIsValid(string $host): bool
     {
         if($host!==self::DEFAULT_HOST)
         {
@@ -61,6 +84,10 @@ class DBconnector extends SingleDBConnection
                     )
                 );
             }
+        }
+        else
+        {
+          return true;
         }
 
     }
