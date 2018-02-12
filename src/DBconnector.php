@@ -18,56 +18,59 @@ class DBconnector extends SingleDBConnection
     public $params=[];
     
     public $mess_types;
-    public $messerror=[];
+    public $mess=[];
 
     
     const HOST='host';
     const DBNAME='dbname';
     const DEFAULT_HOST='localhost';
+    const ERROR='error';
+    const WARNING='warning';
+    const INFO='info';
+    const SUCCESS='success';
     
-    protected function setMessangesTypes()
-    {
-      $this->mess_types=array('Error'=>false,
-                              'Info'=>false,
-                              'Success'=>false);
-    }
     
-    protected function setMessanges()
+    protected function setMessegesError($type,$mess)
     {
-      $this->$messerror['Error']['not_found']="Parameter is not found!";
+      $this->$mess[$type][]=$mess;
     }
     
     //identifying and storing each param from string
     public function getParamFromString(string $par_type, string $par_val): void
-    {
-        $result=true;
-        
+    {       
         switch ($par_type)
         {
             case self::HOST:
-              try 
-              {
-                $this->ensureHostIsValid($par_val);
-              }
-              catch(InvalidArgumentException $e)
-              {
-                $this->mess_types['Error']=true;
-                $this->messerror['Error']['invalid_host']=$e->getMessage();
-              }
+              if($this->checkEmptyParam($par_val)===false)
+                try 
+                {
+                  $this->ensureHostIsValid($par_val);
+                }
+                catch(InvalidArgumentException $e)
+                {                 
+                  $this->setMessegesError(self::ERROR,$e->getMessage());
+                }
               $this->params[self::HOST]=$par_val;
               break;
             case self::DBNAME:
+                $this->checkEmptyParam($par_val);
                 $this->params[self::DBNAME]=$par_val;
                 break;
             default:
-               $this->messerror='';
+               $this->setMessegesError(self::ERROR,sprintf("Parameter %s is not found!",$par_type));
         }
     }
     
-    //getDb nae function to use it in real DB connection
-    public function getDBname(string $dbname): bool
+    //get DB name function to use it in real DB connection
+    public function getDB(string $dbname): bool
     {
       $this->getParamFromString(self::DBNAME,$dbname);
+    }
+    
+    //get host name function to use it in real DB connection
+    public function getHost(string $hostname): bool
+    {
+      $this->getParamFromString(self::HOST,$hostname);
     }
     
     
@@ -89,25 +92,36 @@ class DBconnector extends SingleDBConnection
         {
           return true;
         }
-
+    }
+    
+    private function checkEmptyParam($par_val): bool
+    {
+      if(empty($par_val))
+      {
+        $this->$messerror[self::WARNING]=sprintf('Parameter "%s" must not be empty!',$par_val);
+        return false;
+      }
+      
+      return true;
     }
     
     //checking out all parameters that needed for connection
-    public function checkParams($params)
+    public function checkStringParams($params)
     {
+      //get required symbols to check
       foreach($params as $type=>$param)
       {
-        //if($this->getParamFromString($type,$param)!==false)
-        //{
-
-        //}
+          //the choice if the first digit is not allowed
+          //the choice of minimum length of the param
+          //the choice of the maximum length of the param
+          //the choice of containing special characters only
       }
     }
     
     //return DNS as string contaning from needed parameters
     public function getDns(): string
     {
-        
+        //implement calidation of all params and build DNS string
     }
     
     //validate user name to ensure that it doesn't contain any inapropriate values and start from the digit numbers
