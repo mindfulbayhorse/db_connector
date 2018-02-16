@@ -23,13 +23,16 @@ class DBconnector extends SingleDBConnection
     
     const HOST='host';
     const DBNAME='dbname';
+    const USERNAME='username';
+    const PASSWORD='password';
     const DEFAULT_HOST='localhost';
+    
     const ERROR='error';
     const WARNING='warning';
     const INFO='info';
     const SUCCESS='success';
     
-    
+    //all messeges found during validation of needed parameters are collected in one array
     protected function setMessegesError($type,$mess)
     {
       $this->$mess[$type][]=$mess;
@@ -61,17 +64,7 @@ class DBconnector extends SingleDBConnection
         }
     }
     
-    //get DB name function to use it in real DB connection
-    public function getDB(string $dbname): bool
-    {
-      $this->getParamFromString(self::DBNAME,$dbname);
-    }
-    
-    //get host name function to use it in real DB connection
-    public function getHost(string $hostname): bool
-    {
-      $this->getParamFromString(self::HOST,$hostname);
-    }
+
     
     
     //validate host of connection as IP address
@@ -118,24 +111,9 @@ class DBconnector extends SingleDBConnection
       }
     }
     
-    //return DNS as string contaning from needed parameters
-    public function getDns(): string
-    {
-        //implement calidation of all params and build DNS string
-    }
+
     
-    //validate user name to ensure that it doesn't contain any inapropriate values and start from the digit numbers
-    //according to Unix and Windows rules for user name
-    private function getUsername(string $usename): string
-    {
-        $this->username=$username;
-    }
-    
-    //validate password to make sure that it has the minimum and maxsimum length
-    private function getPassword(string $password): string
-    {
-        $this->password=$password;
-    }
+  
     
     //returning each params for further validation
     /*public function getParam(string $par_type): void
