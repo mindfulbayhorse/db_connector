@@ -40,23 +40,23 @@ class DBconnector extends SingleDBConnection
     
     //identifying and storing each param from string
     public function getParamFromString(string $par_type, string $par_val): void
-    {       
+    {   
+        //catch the error if the param value if not string
         switch ($par_type)
         {
             case self::HOST:
-              if($this->checkEmptyParam($par_val)===false)
-                try 
-                {
-                  $this->ensureHostIsValid($par_val);
-                }
-                catch(InvalidArgumentException $e)
-                {                 
-                  $this->setMessegesError(self::ERROR,$e->getMessage());
-                }
-              $this->params[self::HOST]=$par_val;
+              try 
+              {
+                $this->ensureHostIsValid($par_val);
+                $this->params[self::HOST]=$par_val;
+              }
+              catch(InvalidArgumentException $e)
+              {                 
+                $this->setMessegesError(self::ERROR,$e->getMessage());
+              }
               break;
             case self::DBNAME:
-                $this->checkEmptyParam($par_val);
+                //neede improved validating for string like length and restricted symbols
                 $this->params[self::DBNAME]=$par_val;
                 break;
             default:
@@ -68,7 +68,7 @@ class DBconnector extends SingleDBConnection
     
     
     //validate host of connection as IP address
-    private function ensureHostIsValid(string $host): bool
+    private function ensureHostIsValid(string $host): void
     {
         if($host!==self::DEFAULT_HOST)
         {
@@ -81,17 +81,13 @@ class DBconnector extends SingleDBConnection
                 );
             }
         }
-        else
-        {
-          return true;
-        }
     }
     
-    private function checkEmptyParam($par_val): bool
+    private function checkEmptyParam($par_type,$par_val): bool
     {
       if(empty($par_val))
       {
-        $this->$messerror[self::WARNING]=sprintf('Parameter "%s" must not be empty!',$par_val);
+        $this->$messerror[self::WARNING]=sprintf('Parameter "%s" must not be empty!',$par_type);
         return false;
       }
       
@@ -112,26 +108,28 @@ class DBconnector extends SingleDBConnection
     }
     
 
-    
-  
-    
-    //returning each params for further validation
-    /*public function getParam(string $par_type): void
+    //get DB name function to use it in real DB connection
+    public function getDB(string $dbname): bool
     {
-        switch ($par_type)
-        {
-            case self::HOST:
-                $this->params[self::HOST];
-                break;
-            case self::DBNAME:
-                $this->params[self::DBNAME];
-                break;
-            default:
-                return false;
-        }
-        
+      if($this->checkEmptyParam(self::DBNAME,$dbname)===false)
+        return false; 
+      if(!empty($this->params[self::DBNAME]))
         return true;
-    }*/
+      else
+        return false;
+    }
+    
+    //get host name function to use it in real DB connection
+    public function getHost(string $hostname): bool
+    {
+      //implement method of another class
+      if($this->checkEmptyParam(self::HOST,$par_val)===false)
+        return false;
+      if(!empty($this->params[self::HOST]))
+        return true;
+      else
+        return false;
+    }
     
     
 

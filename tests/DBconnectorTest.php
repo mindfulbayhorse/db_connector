@@ -7,13 +7,13 @@ use PHPUnit\Framework\TestCase;
  */
 final class DBconnectorTest extends TestCase
 {
-    /*public function testHostCannotBeCreatedFromInvalidIPAddress(): void
+    public function testEnsureHostIsValidFail(): void
     {
         $classDB = new DBconnector;
         $this->expectException(InvalidArgumentException::class);
 
         $classDB->getParamFromString('host','justtext');
-    }*/
+    }
 
     public function testgetfromStringParameterIsCreated(): void
     {

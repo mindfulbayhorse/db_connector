@@ -5,7 +5,7 @@ declare(strict_types=1);
  * @copyright 2018
  */
 namespace TypePDOSetParams;
-use DBCoonector; 
+use DBConnector; 
 
 class TypePDOSetParams implements SetParamsReady
 { 
@@ -24,13 +24,15 @@ class TypePDOSetParams implements SetParamsReady
   //get DB name function to use it in real DB connection
   public function getDB(string $dbname): bool
   {
-    $this->getParamFromString(self::DBNAME,$dbname);
+    //implement method of another class
+    //class->getDB($dbname);
   }
   
   //get host name function to use it in real DB connection
   public function getHost(string $hostname): bool
   {
-    $this->getParamFromString(self::HOST,$hostname);
+    //implement method of another class
+    //class->getHost($hostname);
   }
   
   //validate user name to ensure that it doesn't contain any inapropriate values and start from the digit numbers
