@@ -19,6 +19,13 @@ class DBconnector extends SingleDBConnection
     
     public $mess_types;
     public $mess=[];
+    public $paramNames=[];
+    public $errorTypes=[];
+    public $allowedSymbols=[];
+    public $restrictedWords=[];
+    public $restrictedFirstSymbol=[];
+    public $restrictedLastSymbol=[];
+    public $allowedMinLength=[];
 
     
     const HOST='host';
@@ -27,16 +34,132 @@ class DBconnector extends SingleDBConnection
     const PASSWORD='password';
     const DEFAULT_HOST='localhost';
     
-    const ERROR='error';
-    const WARNING='warning';
-    const INFO='info';
-    const SUCCESS='success';
+    function __construct() {
+     $this->setBeginningParams();
+     $this->setTypeError(); 
+     $this->setAllowedSymbols();
+     $this->setRestrictedFirstSymbolPatterns();
+     $this->setRestrictedLastSymbolPatterns();
+    }
+    
+    
+    public function setBeginningParams():void
+    {
+      $this->params=array(
+        self::HOST=>'localhost',
+        self::DBNAME=>'',
+        self::PASSWORD=>'',
+        self::USERNAME=>''
+      );
+      
+    }
+    
+    public function setTypeError(): void
+    {
+      $this->errorTypes=array(
+        'restricted_first_symbol'=>'starts from restricted symbol %s',
+        'allowed_symbols'=>'must include digits only',
+        'minimum_legth'=>'must have minimum legth of %d symbols',
+        'restricted_symbols'=>'must not consists of restricted symbols %s',
+        'allowed_pattern'=>'must only follow the pattern %s',
+        'restricted_last_symbol'=>'cannot end with %s character',
+        'restricted_words'=>'Credentials must be changed before connecting!'
+      );
+    }
+    
+    public function setAllowedSymbols(): void
+    {
+      $this->allowedSymbols=array(
+        self::DBNAME=>array('[a-zA-Z_\$\d]*'),
+        self::USERNAME=>array('@','[\w]')
+      );
+    }
+    
+    public function setRestrictedWordPatterns():void
+    {
+      $this->restrictedWords=array('root');
+    }
+    
+    public function setRestrictedFirstSymbolPatterns():void
+    {
+      $this->restrictedFirstSymbol=array(
+        self::DBNAME=>'[a-zA-Z]+'
+      );
+    }
+    
+    public function setRestrictedLastSymbolPatterns():void
+    {
+      $this->restrictedLastSymbol=array(
+         self::DBNAME=>''
+      );
+    }
+    
+    public function setPossiblePatterns():void
+    {
+      $this->possiblePatterns=array(
+        $this->errorTypes['allowed_first_symbol']=>array('pattern'=>'^\d'),
+        $this->errorTypes['allowed_pattern']=>'\d*'
+      );
+    }
+    
+    public function buildPattern($typePar):string
+    {
+      $patternString='';
+      switch ($typePar)
+      {
+        case self::DBNAME:
+          if(!empty($this->restrictedFirstSymbol[self::DBNAME]))
+            $patternString .='^'.$this->restrictedFirstSymbol[self::DBNAME];
+          if(!empty($this->allowedSymbols[self::DBNAME]))
+            foreach($this->allowedSymbols[self::DBNAME] as $symbols)
+            {
+              $patternString .=$symbols;
+            }
+          if(isset($this->restrictedLastSymbol[self::DBNAME]))
+            $patternString .=$this->restrictedLastSymbol[self::DBNAME].'$';
+        break;
+        case self::USERNAME:
+          break;
+        default:
+          return '';
+      }
+      
+      return $patternString;
+    }
+    
+    public function setAllowedLength():void
+    {
+      $this->allowedMinLength=array(
+        self::USERNAME=>1
+      );
+      
+    }
+    
+    protected function setParamNames(): void
+    {
+      $this->paramNames=[
+        self::HOST=>'host',
+        self::DBNAME=>'database',
+        self::POST=>'port',
+        self::USERNAME=>'user name',
+        self::PASSWARD=>'password'
+      ];
+      
+    }
     
     //all messeges found during validation of needed parameters are collected in one array
-    protected function setMessegesError($type,$mess)
+    public function setMessegesError($type,$mess)
     {
       $this->$mess[$type][]=$mess;
     }
+    
+    public function setMessage($name_par,$val_par):string
+    {
+      $mess="Parameter '$name_par' %s $val_par!";
+      return $mess;
+    }
+    
+   
     
     //identifying and storing each param from string
     public function getParamFromString(string $par_type, string $par_val): void
@@ -45,19 +168,26 @@ class DBconnector extends SingleDBConnection
         switch ($par_type)
         {
             case self::HOST:
-              try 
-              {
-                $this->ensureHostIsValid($par_val);
-                $this->params[self::HOST]=$par_val;
-              }
-              catch(InvalidArgumentException $e)
-              {                 
-                $this->setMessegesError(self::ERROR,$e->getMessage());
-              }
+              if(empty($par_val))
+                  $strMess=$this->setMessage($this->paramsNames[self::HOST],$par_val);
+              else
+                try 
+                {
+                  $this->ensureHostIsValid($par_val);
+                  $this->params[self::HOST]=$par_val;
+                }
+                catch(InvalidArgumentException $e)
+                {                 
+                  $this->setMessegesError(self::ERROR,$e->getMessage());
+                }
               break;
             case self::DBNAME:
-                //neede improved validating for string like length and restricted symbols
-                $this->params[self::DBNAME]=$par_val;
+                //need to be improved validating for string like length and restricted symbols
+                if(empty($par_val))
+                  $strMess=$this->setMessage($this->paramsNames[self::DBNAME],$par_val);
+                  $pattern=$this->buildPattern(self::DBNAME);
+                if(preg_match('#'.$pattern.'#',$par_val))
+                  $this->params[self::DBNAME]=$par_val;               
                 break;
             default:
                $this->setMessegesError(self::ERROR,sprintf("Parameter %s is not found!",$par_type));
@@ -83,7 +213,7 @@ class DBconnector extends SingleDBConnection
         }
     }
     
-    private function checkEmptyParam($par_type,$par_val): bool
+    /*private function checkEmptyParam($par_type,$par_val): bool
     {
       if(empty($par_val))
       {
@@ -92,7 +222,7 @@ class DBconnector extends SingleDBConnection
       }
       
       return true;
-    }
+    }*/
     
     //checking out all parameters that needed for connection
     public function checkStringParams($params)
