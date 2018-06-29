@@ -12,7 +12,7 @@ final class DBconnectorTest extends TestCase
     {
       $classDB = new DBconnector;
       $patternDB=$classDB->buildPattern('dbname');
-      $this->AssertEquals($patternDB,'^[a-zA-Z]+([_\$]+[a-z\d]+)|([a-zA-z\d]*)$');
+      $this->AssertEquals($patternDB,'^[a-zA-Z]+(([_\$]+[a-z\d]+)|([a-zA-z\d]*))$');
     }
     
     public function testGetParamFromStringWrongDBnameDigitFirst(): void
