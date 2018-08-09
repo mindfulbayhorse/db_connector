@@ -5,7 +5,7 @@
  * @copyright 2017
  */
 
-namespace factoryDB;
+namespace dbConnector;
 
 /**
  * Exception that is raised when invalid (scalar) arguments

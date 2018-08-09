@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace factoryDB;
+//namespace dbConnector;
 /**
  * Class for implementing validation parameters for database connection
  * @author Olga Zhilkova
@@ -9,7 +9,7 @@ namespace factoryDB;
 class DBconnector extends SingleDBConnection
 {
     
-    protected $user='';
+    protected $username='';
     protected $password='';
     protected $dns='';
     
@@ -40,6 +40,16 @@ class DBconnector extends SingleDBConnection
      $this->setAllowedSymbols();
      $this->setRestrictedFirstSymbolPatterns();
      $this->setRestrictedLastSymbolPatterns();
+    }
+    
+    public function checkParams($params)
+    {
+      
+    }
+    
+    public function getDns():string
+    {
+      
     }
     
     
@@ -259,9 +269,7 @@ class DBconnector extends SingleDBConnection
         return true;
       else
         return false;
-    }
-    
-    
+    }    
 
 }
 

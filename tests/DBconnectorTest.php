@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace factoryDB;
+namespace dbConnector;
 use PHPUnit\Framework\TestCase;
 /**
  * @covers DBconnector

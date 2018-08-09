@@ -5,7 +5,7 @@
  * @copyright 2017
  */
 
-namespace factoryDB;
+namespace dbConnector;
 
 /**
  * Marker interface for exceptions.
