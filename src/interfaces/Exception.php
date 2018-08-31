@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Throwable interface for 7.0 new Error exeptions
  * @author Olga Zhilkova

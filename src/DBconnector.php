@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-//namespace dbConnector;
+namespace dbConnector;
 /**
  * Class for implementing validation parameters for database connection
  * @author Olga Zhilkova
@@ -26,6 +26,7 @@ class DBconnector extends SingleDBConnection
     public $restrictedFirstSymbol=[];
     public $restrictedLastSymbol=[];
     public $allowedMinLength=[];
+    public $possiblePatterns=[];
 
     
     const HOST='host';
@@ -40,6 +41,7 @@ class DBconnector extends SingleDBConnection
      $this->setAllowedSymbols();
      $this->setRestrictedFirstSymbolPatterns();
      $this->setRestrictedLastSymbolPatterns();
+     $this->setPossiblePatterns();
     }
     
     public function checkParams($params)
@@ -80,7 +82,9 @@ class DBconnector extends SingleDBConnection
     public function setAllowedSymbols(): void
     {
       $this->allowedSymbols=array(
-        self::DBNAME=>array('[a-zA-Z_\$\d]*'),
+        self::DBNAME=>array('([_\$]+[a-zA-Z\d]+)*',//if _ or $ is included to the string, the last symbol can be onlt althabetic or number
+                            '([a-zA-z\d]*)'//the last symbols can be as word or digital as many as possible and also without these symbols
+                            ),
         self::USERNAME=>array('@','[\w]')
       );
     }
@@ -93,40 +97,47 @@ class DBconnector extends SingleDBConnection
     public function setRestrictedFirstSymbolPatterns():void
     {
       $this->restrictedFirstSymbol=array(
-        self::DBNAME=>'[a-zA-Z]+'
+        self::DBNAME=>'^'
       );
     }
     
     public function setRestrictedLastSymbolPatterns():void
     {
       $this->restrictedLastSymbol=array(
-         self::DBNAME=>''
+         self::DBNAME=>'$'
       );
     }
     
     public function setPossiblePatterns():void
     {
       $this->possiblePatterns=array(
-        $this->errorTypes['allowed_first_symbol']=>array('pattern'=>'^\d'),
-        $this->errorTypes['allowed_pattern']=>'\d*'
+        self::DBNAME=>array('[a-zA-Z]+'=>'Alphabetic symbols')
       );
     }
     
-    public function buildPattern($typePar):string
+    public function buildPattern(string $typePar):string
     {
       $patternString='';
       switch ($typePar)
       {
         case self::DBNAME:
           if(!empty($this->restrictedFirstSymbol[self::DBNAME]))
-            $patternString .='^'.$this->restrictedFirstSymbol[self::DBNAME];
-          if(!empty($this->allowedSymbols[self::DBNAME]))
-            foreach($this->allowedSymbols[self::DBNAME] as $symbols)
-            {
-              $patternString .=$symbols;
-            }
-          if(isset($this->restrictedLastSymbol[self::DBNAME]))
-            $patternString .=$this->restrictedLastSymbol[self::DBNAME].'$';
+            $patternString .=$this->restrictedFirstSymbol[self::DBNAME];
+          if(!empty($this->possiblePatterns[self::DBNAME]))
+            foreach($this->possiblePatterns[self::DBNAME] as $patt=>$expl)
+             $patternString .=$patt;
+          if(isset($this->allowedSymbols[self::DBNAME]))
+            if(is_array($this->allowedSymbols[self::DBNAME]))
+               $patternString .='(';
+              foreach($this->allowedSymbols[self::DBNAME] as $key=>$altSubPattern)
+              {
+                $patternString .='('.$altSubPattern.')';
+                if($key!==count($this->allowedSymbols[self::DBNAME])-1)
+                  $patternString .='|';
+              }
+              $patternString .=')';
+          if(!empty($this->restrictedLastSymbol[self::DBNAME]))
+            $patternString .=$this->restrictedLastSymbol[self::DBNAME];
         break;
         case self::USERNAME:
           break;

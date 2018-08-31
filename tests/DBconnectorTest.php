@@ -12,52 +12,35 @@ final class DBconnectorTest extends TestCase
     {
       $classDB = new DBconnector;
       $patternDB=$classDB->buildPattern('dbname');
-      $this->AssertEquals($patternDB,'^[a-zA-Z]+(([_\$]+[a-z\d]+)|([a-zA-z\d]*))$');
-    }
-    
-    public function testGetParamFromStringWrongDBnameDigitFirst(): void
-    {
-        $classDB = new DBconnector;
-        $classDB->getParamFromString('dbname','1');
-        $this->assertEquals($classDB->params['dbname'], "");
-    }
-    
-    public function testGetParamFromStringRestrictedLastSymbolDBname(): void
-    {
-        $classDB = new DBconnector;
-        $classDB->getParamFromString('dbname','d_');
-        $this->assertEquals($classDB->params['dbname'], "");
+      $this->AssertEquals($patternDB,'^[a-zA-Z]+(?([_\$]+)[a-zA-Z\d]+|([a-zA-z\d]*))$');
     }
     
     
-    public function testGetParamFromStringDBnameLength(): void
+    /*public function testGetParamFromStringWrongDBnameOneSymbolony(): void
     {
-        $classDB = new DBconnector;
-        $classDB->getParamFromString('dbname','d');
-        $this->assertEquals($classDB->params['dbname'], 'd');
-    }    
-
-    
-    public function testGetParamFromStringDBnameDigitWords(): void
-    {
-        $classDB = new DBconnector;
-        $classDB->getParamFromString('dbname','d2$d_f');
-        $this->assertEquals($classDB->params['dbname'], "d2\$d_f");
+      $classDB = new DBconnector;
+      $this->assertRegExp('/^[a-zA-Z]+(?([_\$]+)[a-zA-Z\d]+|([a-zA-z\d]*))$/', 'd');
     }
     
-    public function testGetParamFromStringDBnameDigitFirst(): void
+    public function testGetParamFromStringWrongDBnameDollarSpace(): void
     {
-        $classDB = new DBconnector;
-        $classDB->getParamFromString('dbname','1d');
-        $this->assertEquals($classDB->params['dbname'], "1d");
+      $classDB = new DBconnector;
+      $this->assertRegExp('/^[a-zA-Z]+(?([_\$]+)[a-zA-Z\d]+|([a-zA-z\d]*))$/', 'd2$d_f');
     }
     
-    public function testGetParamFromStringDBnameDollarFirst(): void
+    public function testGetParamFromStringWrongDBnameFailer1(): void
     {
-        $classDB = new DBconnector;
-        $classDB->getParamFromString('dbname','$d');
-        $this->assertEquals($classDB->params['dbname'], "");
+      $classDB = new DBconnector;
+      $this->assertRegExp('/^[a-zA-Z]+[a-zA-z\d]*(?([_\$]+)[a-zA-Z\d]+)$/', 'd2_');
+    }*/
+    
+    public function testGetParamFromStringWrongDBnameFailer2(): void
+    {
+      $classDB = new DBconnector;
+      $this->assertRegExp('/^[a-zA-Z]+[\w\$]*(?(?<=[_]|[\$])[a-zA-Z\d]+)$/', 'd_$rf_$5f');
     }
+    
+    
     
     /*public function testEnsureHostIsValidFail(): void
     {
