@@ -7,8 +7,8 @@
  */
 require 'src/interfaces/exception.php';
 require 'src/exceptions/InvalidArgumentException.php';
-require 'src/SingleDBConnection.php';
-require 'src/DBconnector.php';
+require 'src/DBConnection.php';
+require 'src/MySqlconnector.php';
 
 
 ?>
