@@ -19,7 +19,7 @@ class SimpleClass
 		$username = 'ekodardbuser';
 		$password = '6tgrft_YH';
 		$options = array();
-        try
+    try
 		{
 		  $dbh = new PDO($dsn, $username, $password,$options);
 		  echo "Connected<p>";
