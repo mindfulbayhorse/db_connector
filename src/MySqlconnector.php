@@ -6,9 +6,8 @@ namespace dbConnector;
  * @author Olga Zhilkova
  * @copyright 2017
  */
-class MySqlconnector extends DBConnection
+class MySqlConnector extends DBConnection
 {
-    use ValidateValue;
     
     protected $username='';
     protected $password='';

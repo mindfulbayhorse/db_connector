@@ -1,0 +1,1 @@
+INSERT INTO feeds (name_feed, url_feed, desc_feed) VALUES (:name_feed, :url_feed, :desc_feed);

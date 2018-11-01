@@ -1,4 +1,4 @@
-<phpunit bootstrap="/home/vagrant/Code/Laravel/public/samples/php_code/dbConnector/src/autoload.php">
+<phpunit bootstrap="src/autoload.php">
   <testsuites>
     <testsuite name="mysql">
       <directory>tests</directory>

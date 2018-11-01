@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<dataset>
+    <table name="feeds">
+        <column>id</column>
+        <column>name_feed</column>
+        <column>url_feed</column>
+        <column>desc_feed</column>
+        <column>id_category</column>
+        <row>
+            <value>1</value>
+            <value>The Inspired Room</value>
+            <value>http://feeds.feedburner.com/wordpress/woWq</value>
+            <value>All about home decor and interiour design</value>
+            <null />
+        </row>
+        <row>
+            <value>2</value>
+            <value>Interveave</value>
+            <value>https://www.interweave.com/feed/</value>
+            <value>All types of handywork</value>
+            <null />
+        </row>
+         <row>
+            <value>3</value>
+            <value>Drupal org</value>
+            <value>https://www.drupal.org/user/3590014/track/code/feed/</value>
+            <value>Interesting posts about developemnt in Drupal</value>
+            <null />
+        </row>
+    </table>
+</dataset>

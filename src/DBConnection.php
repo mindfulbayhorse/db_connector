@@ -13,6 +13,7 @@ abstract class DBConnection
     
     abstract public function getDns():string;
     
+    
     function __sleep()
     {
       return array('dsn', 'username', 'password');

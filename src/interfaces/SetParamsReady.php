@@ -5,15 +5,14 @@ declare(strict_types=1);
  * @copyright 2018
  */
 
-namespace ParamsReady;
+namespace DBParams;
 
 interface SetParamsReady
 {
-  const MYSQL_TYPE='mysql';
-  const SQLIGHT_TYPE='sqlite';
-  const POSTGRESQL_TYPE='postgresql';
   
   public function __construct($typePDO string): void;
+  
+  public function buildDBStructure(): bool;
   
 }
 

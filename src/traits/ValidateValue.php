@@ -25,7 +25,7 @@ trait ValidateValue
     public $possiblePatterns=[];
     */
     
-  function isValueValid(string $pattern, $value):bool
+  function isPatternValid(string $pattern, $value):bool
   {
     if(!empty($value) && strlen($value)<=$this->max_length)
         if(preg_match('/'.$pattern.'/', $value, $this->matches, PREG_OFFSET_CAPTURE))

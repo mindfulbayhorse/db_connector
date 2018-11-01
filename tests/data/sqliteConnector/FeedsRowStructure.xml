@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<dataset>
+    <feeds name_feed="The Inspired Room" url_feed="http://feeds.feedburner.com/wordpress/woWq" desc_feed="All about home decor and interiour design" />
+    <feeds name_feed="Interveave" url_feed="https://www.interweave.com/feed/" desc_feed="All types of handywork" />
+    <feeds name_feed="Drupal org" url_feed="https://www.drupal.org/user/3590014/track/code/feed/" desc_feed="Interesting posts about developemnt in Drupal" />
+    <feeds name_feed="Everyday grammar" url_feed="https://learningenglish.voanews.com/api/zoroqqegtoqq" desc_feed="Tips for English leaners about details in speaking English" />
+    <feeds name_feed="Laravel" url_feed="https://rss.simplecast.com/podcasts/1356/rss" desc_feed="Laravel blog" />
+    <feeds name_feed="Naked Security" url_feed="https://nakedsecurity.sophos.com/feed/" desc_feed="Computer Security News, Advice and Research" />
+</dataset>

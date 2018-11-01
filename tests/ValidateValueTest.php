@@ -8,10 +8,10 @@ use PHPUnit\Framework\TestCase;
 final class ValidateValueTest extends TestCase
 {
 
-    public function isValueValidMaxLength(): void
+    public function isPatternValidMaxLength(): void
     {
       $classDB = new DBconnector;
-      $this->assertRegExp('/^[a-zA-Z]+[\w\$]*(?(?<=[_]|[\$])[a-zA-Z\d]+)$/', 'd_$rf_$5f');
+      $this->assertTrue($classDB->isPatternValid('/^[a-zA-Z]+[\w\$]*(?(?<=[_]|[\$])[a-zA-Z\d]+)$/', 'd_$rf_$5f'),"Pattern validation is not working correctly");
     }
     
     
