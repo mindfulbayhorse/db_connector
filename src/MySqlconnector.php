@@ -24,7 +24,7 @@ class MySqlConnector extends DBConnection
     const DBNAME='dbname';
     const USERNAME='username';
     const PASSWORD='password';
-    const DEFAULT_HOST='localhost';
+   
     
 
     

@@ -8,7 +8,9 @@ namespace dbConnector;
  */
 abstract class DBConnection
 {
-
+     const DEFAULT_HOST='localhost';
+     const DEFAULT_HOST_IP='127.0.0.1';
+     
     abstract public function checkParams($params);
     
     abstract public function getDns():string;
